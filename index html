@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UzyfinePro | Reset Password</title>
+    <style>
+        /* Navy Blue Background */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; background-color: #001f3f; margin: 0; 
+        }
+        /* Teal Card */
+        .card { 
+            background: #ffffff; padding: 40px; border-radius: 15px; 
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        h2 { color: #008080; margin-bottom: 10px; } /* Teal Title */
+        p { color: #555; font-size: 14px; margin-bottom: 25px; }
+        
+        input { 
+            width: 100%; padding: 12px; margin: 10px 0; 
+            border-radius: 8px; border: 1px solid #ddd; 
+            box-sizing: border-box; font-size: 16px;
+        }
+        /* Amber Button */
+        button { 
+            width: 100%; padding: 14px; background: #FFBF00; 
+            color: #001f3f; border: none; border-radius: 8px; 
+            cursor: pointer; font-weight: bold; font-size: 16px;
+            margin-top: 15px; transition: 0.3s;
+        }
+        button:hover { background: #e6ac00; }
+        #status { margin-top: 20px; font-weight: bold; font-size: 14px; }
+        .success { color: #008080; }
+        .error { color: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>UzyfinePro</h2>
+        <p>Set a strong new password for your account</p>
+        
+        <input type="password" id="pass" placeholder="New Password">
+        <input type="password" id="confirm" placeholder="Confirm New Password">
+        
+        <button onclick="handleUpdate()">UPDATE PASSWORD</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function handleUpdate() {
+            const pass = document.getElementById('pass').value;
+            const confirm = document.getElementById('confirm').value;
+            const status = document.getElementById('status');
+
+            if (pass.length < 6) {
+                status.className = "error";
+                status.innerText = "Password must be at least 6 characters.";
+                return;
+            }
+            if (pass !== confirm) {
+                status.className = "error";
+                status.innerText = "Passwords do not match!";
+                return;
+            }
+
+            // 1. Get the access token from the URL link Supabase sent
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const token = params.get('access_token');
+
+            if (!token) {
+                status.className = "error";
+                status.innerText = "Invalid or expired session. Request a new link.";
+                return;
+            }
+
+            status.innerText = "Updating... Please wait.";
+
+            // 2. Call Supabase API
+            try {
+                const response = await fetch('https://YOUR_PROJECT_ID.supabase.co/auth/v1/user', {
+                    method: 'PUT',
+                    headers: {
+                        'apikey': 'YOUR_ANON_KEY',
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password: pass })
+                });
+
+                if (response.ok) {
+                    status.className = "success";
+                    status.innerText = "Success! You can now open UzyfinePro and login.";
+                } else {
+                    const errData = await response.json();
+                    status.className = "error";
+                    status.innerText = "Error: " + errData.msg;
+                }
+            } catch (e) {
+                status.className = "error";
+                status.innerText = "Connection failed. Check your data.";
+            }
+        }
+    </script>
+</body>
+</html>
 
