@@ -1,1 +1,62 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringo | Email Verified</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #001f3f; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h2 { color: #008080; margin-bottom: 5px; }
+        p { color: #555; font-size: 15px; }
+        #status { margin-top: 20px; font-weight: bold; min-height: 24px; }
+        
+        /* The Amber Button */
+        .btn { 
+            display: none; /* Hidden until success */
+            background-color: #FFBF00; color: #001f3f; 
+            padding: 14px 25px; border: none; border-radius: 8px; 
+            text-decoration: none; font-weight: bold; font-size: 16px;
+            margin-top: 20px; transition: 0.3s; cursor: pointer;
+        }
+        .btn:hover { background-color: #e6ac00; }
+
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #008080; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Ringo</h2>
+        <div id="loader" class="loader"></div>
+        <div id="status">Verifying your account...</div>
+        
+        <button id="loginBtn" class="btn" onclick="closeWindow()">BACK TO LOGIN</button>
+    </div>
+
+    <script>
+        function closeWindow() {
+            // On mobile, this usually just tells the user what to do 
+            // since browsers block scripts from closing tabs
+            alert("Please return to the Ringo app to log in!");
+            window.close();
+        }
+
+        async function verifyEmail() {
+            const status = document.getElementById('status');
+            const loader = document.getElementById('loader');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Artificial delay to make it look like it's working hard for the user
+            setTimeout(() => {
+                loader.style.display = "none";
+                status.style.color = "#008080";
+                status.innerText = "✅ Verification Complete!";
+                loginBtn.style.display = "inline-block"; // Show the Amber button
+            }, 2500);
+        }
+        window.onload = verifyEmail;
+    </script>
+</body>
+</html>
