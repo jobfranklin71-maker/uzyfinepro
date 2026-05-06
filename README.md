@@ -1,2 +1,2 @@
 # UzyfinePro app home
-For resetting app password 
+For email verification and app password reset.
